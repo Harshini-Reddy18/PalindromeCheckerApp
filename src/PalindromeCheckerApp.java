@@ -12,6 +12,9 @@ public class PalindromeCheckerApp {
     static ArrayList<String> checkedStrings = new ArrayList<>();
     static HashMap<String, Boolean> results = new HashMap<>();
 
+    // UC8: Case-sensitive mode flag
+    static boolean caseSensitiveMode = false;
+
     // UC1: Welcome Message Module
     public static void displayWelcomeMessage() {
         System.out.println("====================================");
@@ -23,8 +26,14 @@ public class PalindromeCheckerApp {
 
     // UC2: Hardcoded Palindrome Check
     public static boolean isPalindrome(String str) {
-        // Remove spaces and convert to lowercase
-        String cleaned = str.replaceAll("\\s+", "").toLowerCase();
+        String cleaned;
+
+        // UC8: Case-sensitive mode handling
+        if (caseSensitiveMode) {
+            cleaned = str.replaceAll("\\s+", "");
+        } else {
+            cleaned = str.replaceAll("\\s+", "").toLowerCase();
+        }
 
         // Check if string is palindrome
         String reversed = new StringBuilder(cleaned).reverse().toString();
@@ -201,6 +210,46 @@ public class PalindromeCheckerApp {
         System.out.println();
     }
 
+    // UC8: Case-Sensitive Mode
+    public static void caseSensitiveModePalindromeCheck() {
+        System.out.println("--- UC8: Case-Sensitive Mode Palindrome Check ---\n");
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Choose mode:");
+        System.out.println("1. Case-Insensitive (default)");
+        System.out.println("2. Case-Sensitive");
+        System.out.print("Enter your choice (1 or 2): ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        if (choice == 2) {
+            caseSensitiveMode = true;
+            System.out.println("✓ Case-Sensitive Mode ENABLED\n");
+        } else {
+            caseSensitiveMode = false;
+            System.out.println("✓ Case-Insensitive Mode ENABLED\n");
+        }
+
+        boolean continueChecking = true;
+
+        while (continueChecking) {
+            System.out.print("Enter a string to check (or 'exit' to quit): ");
+            String userInput = scanner.nextLine();
+
+            if (userInput.equalsIgnoreCase("exit")) {
+                System.out.println("\n✓ Exiting Case-Sensitive Mode Check\n");
+                continueChecking = false;
+            } else if (!isValidInput(userInput)) {
+                System.out.println("❌ Invalid input! Please enter only alphabetic characters and spaces.\n");
+            } else {
+                boolean result = isPalindrome(userInput);
+                String mode = caseSensitiveMode ? "[CASE-SENSITIVE]" : "[CASE-INSENSITIVE]";
+                System.out.println(mode + " \"" + userInput + "\" is " + (result ? "a palindrome" : "NOT a palindrome") + "\n");
+            }
+        }
+    }
+
     public static void main(String[] args) {
         displayWelcomeMessage();
         checkHardcodedPalindromes();
@@ -209,5 +258,6 @@ public class PalindromeCheckerApp {
         validatedUserInputPalindrome();
         exportResultsToFile();
         displayPalindromeStatistics();
+        caseSensitiveModePalindromeCheck();
     }
 }
