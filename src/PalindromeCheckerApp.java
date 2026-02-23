@@ -3,8 +3,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PalindromeCheckerApp {
+
+    // Statistics tracking
+    static ArrayList<String> checkedStrings = new ArrayList<>();
+    static HashMap<String, Boolean> results = new HashMap<>();
 
     // UC1: Welcome Message Module
     public static void displayWelcomeMessage() {
@@ -134,6 +140,10 @@ public class PalindromeCheckerApp {
                     String resultText = "\"" + input + "\" is " + (result ? "a palindrome" : "NOT a palindrome");
                     System.out.println("✓ " + resultText + "\n");
                     writer.write(i + ". " + resultText + "\n");
+
+                    // Add to statistics
+                    checkedStrings.add(input);
+                    results.put(input, result);
                 } else {
                     System.out.println("❌ Invalid input! Skipping...\n");
                     writer.write(i + ". INVALID INPUT: \"" + input + "\"\n");
@@ -150,6 +160,47 @@ public class PalindromeCheckerApp {
         }
     }
 
+    // UC7: Palindrome Statistics
+    public static void displayPalindromeStatistics() {
+        System.out.println("--- UC7: Palindrome Statistics ---\n");
+
+        if (checkedStrings.isEmpty()) {
+            System.out.println("⚠️  No palindromes checked yet.\n");
+            return;
+        }
+
+        int totalChecked = checkedStrings.size();
+        int palindromeCount = 0;
+        int nonPalindromeCount = 0;
+
+        for (Boolean isPalin : results.values()) {
+            if (isPalin) {
+                palindromeCount++;
+            } else {
+                nonPalindromeCount++;
+            }
+        }
+
+        double palindromePercentage = (totalChecked > 0) ? (palindromeCount * 100.0) / totalChecked : 0;
+
+        System.out.println("📊 STATISTICS SUMMARY:");
+        System.out.println("=".repeat(50));
+        System.out.println("Total Strings Checked: " + totalChecked);
+        System.out.println("Palindromes Found: " + palindromeCount);
+        System.out.println("Non-Palindromes: " + nonPalindromeCount);
+        System.out.println("Palindrome Percentage: " + String.format("%.2f", palindromePercentage) + "%");
+        System.out.println("=".repeat(50));
+
+        System.out.println("\n📋 DETAILED LIST:");
+        int count = 1;
+        for (String str : checkedStrings) {
+            boolean result = results.get(str);
+            System.out.println(count + ". \"" + str + "\" -> " + (result ? "✓ Palindrome" : "✗ Not Palindrome"));
+            count++;
+        }
+        System.out.println();
+    }
+
     public static void main(String[] args) {
         displayWelcomeMessage();
         checkHardcodedPalindromes();
@@ -157,5 +208,6 @@ public class PalindromeCheckerApp {
         repeatedUserInputPalindrome();
         validatedUserInputPalindrome();
         exportResultsToFile();
+        displayPalindromeStatistics();
     }
 }
