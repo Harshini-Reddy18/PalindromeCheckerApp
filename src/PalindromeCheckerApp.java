@@ -68,10 +68,48 @@ public class PalindromeCheckerApp {
         }
     }
 
+    // UC5: Input Validation
+    public static boolean isValidInput(String input) {
+        // Check if input is null or empty
+        if (input == null || input.trim().isEmpty()) {
+            return false;
+        }
+
+        // Check if input contains only alphabetic characters and spaces
+        if (!input.matches("[a-zA-Z\\s]+")) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static void validatedUserInputPalindrome() {
+        System.out.println("--- UC5: Input Validation Palindrome Check ---\n");
+
+        Scanner scanner = new Scanner(System.in);
+        boolean continueChecking = true;
+
+        while (continueChecking) {
+            System.out.print("Enter a string to check if it's a palindrome (only alphabets and spaces allowed, or 'exit' to quit): ");
+            String userInput = scanner.nextLine();
+
+            if (userInput.equalsIgnoreCase("exit")) {
+                System.out.println("\nThank you for using Palindrome Checker App! Goodbye!\n");
+                continueChecking = false;
+            } else if (!isValidInput(userInput)) {
+                System.out.println("❌ Invalid input! Please enter only alphabetic characters and spaces.\n");
+            } else {
+                boolean result = isPalindrome(userInput);
+                System.out.println("✓ Result: \"" + userInput + "\" is " + (result ? "a palindrome" : "NOT a palindrome") + "\n");
+            }
+        }
+    }
+
     public static void main(String[] args) {
         displayWelcomeMessage();
         checkHardcodedPalindromes();
         checkUserInputPalindrome();
         repeatedUserInputPalindrome();
+        validatedUserInputPalindrome();
     }
 }
