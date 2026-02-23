@@ -1,4 +1,8 @@
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class PalindromeCheckerApp {
 
@@ -105,11 +109,53 @@ public class PalindromeCheckerApp {
         }
     }
 
+    // UC6: Export Results to File
+    public static void exportResultsToFile() {
+        System.out.println("--- UC6: Export Results to File ---\n");
+
+        Scanner scanner = new Scanner(System.in);
+        String fileName = "palindrome_results.txt";
+
+        System.out.print("Enter number of palindromes to check: ");
+        int count = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        try (FileWriter writer = new FileWriter(fileName)) {
+            writer.write("Palindrome Checker Results\n");
+            writer.write("Generated: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n");
+            writer.write("=".repeat(50) + "\n\n");
+
+            for (int i = 1; i <= count; i++) {
+                System.out.print("Enter string " + i + ": ");
+                String input = scanner.nextLine();
+
+                if (isValidInput(input)) {
+                    boolean result = isPalindrome(input);
+                    String resultText = "\"" + input + "\" is " + (result ? "a palindrome" : "NOT a palindrome");
+                    System.out.println("✓ " + resultText + "\n");
+                    writer.write(i + ". " + resultText + "\n");
+                } else {
+                    System.out.println("❌ Invalid input! Skipping...\n");
+                    writer.write(i + ". INVALID INPUT: \"" + input + "\"\n");
+                }
+            }
+
+            writer.write("\n" + "=".repeat(50) + "\n");
+            writer.write("End of Report\n");
+
+            System.out.println("✓ Results exported to '" + fileName + "' successfully!\n");
+
+        } catch (IOException e) {
+            System.out.println("❌ Error writing to file: " + e.getMessage() + "\n");
+        }
+    }
+
     public static void main(String[] args) {
         displayWelcomeMessage();
         checkHardcodedPalindromes();
         checkUserInputPalindrome();
         repeatedUserInputPalindrome();
         validatedUserInputPalindrome();
+        exportResultsToFile();
     }
 }
