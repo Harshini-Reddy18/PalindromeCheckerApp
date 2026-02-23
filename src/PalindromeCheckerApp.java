@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class PalindromeCheckerApp {
 
     // UC1: Welcome Message Module
@@ -31,8 +33,23 @@ public class PalindromeCheckerApp {
         System.out.println();
     }
 
+    // UC3: User Input Palindrome Check
+    public static void checkUserInputPalindrome() {
+        System.out.println("--- UC3: User Input Palindrome Check ---\n");
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter a string to check if it's a palindrome: ");
+        String userInput = scanner.nextLine();
+
+        boolean result = isPalindrome(userInput);
+
+        System.out.println("\nResult: \"" + userInput + "\" is " + (result ? "a palindrome" : "NOT a palindrome\n"));
+    }
+
     public static void main(String[] args) {
         displayWelcomeMessage();
         checkHardcodedPalindromes();
+        checkUserInputPalindrome();
     }
 }
