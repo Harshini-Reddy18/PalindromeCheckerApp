@@ -47,9 +47,31 @@ public class PalindromeCheckerApp {
         System.out.println("\nResult: \"" + userInput + "\" is " + (result ? "a palindrome" : "NOT a palindrome\n"));
     }
 
+    // UC4: Repeated User Input
+    public static void repeatedUserInputPalindrome() {
+        System.out.println("--- UC4: Repeated User Input Palindrome Check ---\n");
+
+        Scanner scanner = new Scanner(System.in);
+        boolean continueChecking = true;
+
+        while (continueChecking) {
+            System.out.print("Enter a string to check if it's a palindrome (or 'exit' to quit): ");
+            String userInput = scanner.nextLine();
+
+            if (userInput.equalsIgnoreCase("exit")) {
+                System.out.println("\nThank you for using Palindrome Checker App! Goodbye!\n");
+                continueChecking = false;
+            } else {
+                boolean result = isPalindrome(userInput);
+                System.out.println("Result: \"" + userInput + "\" is " + (result ? "a palindrome" : "NOT a palindrome") + "\n");
+            }
+        }
+    }
+
     public static void main(String[] args) {
         displayWelcomeMessage();
         checkHardcodedPalindromes();
         checkUserInputPalindrome();
+        repeatedUserInputPalindrome();
     }
 }
