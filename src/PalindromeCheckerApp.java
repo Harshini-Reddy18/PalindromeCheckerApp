@@ -15,6 +15,9 @@ public class PalindromeCheckerApp {
     // UC8: Case-sensitive mode flag
     static boolean caseSensitiveMode = false;
 
+    // UC9: Special characters handling flag
+    static boolean ignoreSpecialChars = true;
+
     // UC1: Welcome Message Module
     public static void displayWelcomeMessage() {
         System.out.println("====================================");
@@ -28,11 +31,16 @@ public class PalindromeCheckerApp {
     public static boolean isPalindrome(String str) {
         String cleaned;
 
-        // UC8: Case-sensitive mode handling
-        if (caseSensitiveMode) {
-            cleaned = str.replaceAll("\\s+", "");
+        // UC9: Handle special characters
+        if (ignoreSpecialChars) {
+            cleaned = str.replaceAll("[^a-zA-Z0-9]", "");
         } else {
-            cleaned = str.replaceAll("\\s+", "").toLowerCase();
+            cleaned = str.replaceAll("\\s+", "");
+        }
+
+        // UC8: Case-sensitive mode handling
+        if (!caseSensitiveMode) {
+            cleaned = cleaned.toLowerCase();
         }
 
         // Check if string is palindrome
@@ -250,6 +258,46 @@ public class PalindromeCheckerApp {
         }
     }
 
+    // UC9: Special Characters Handling
+    public static void specialCharactersHandling() {
+        System.out.println("--- UC9: Special Characters Handling ---\n");
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Choose mode:");
+        System.out.println("1. Ignore Special Characters (default)");
+        System.out.println("2. Keep Special Characters");
+        System.out.print("Enter your choice (1 or 2): ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        if (choice == 2) {
+            ignoreSpecialChars = false;
+            System.out.println("✓ Special Characters Mode ENABLED (only spaces removed)\n");
+        } else {
+            ignoreSpecialChars = true;
+            System.out.println("✓ Ignore Special Characters Mode ENABLED\n");
+        }
+
+        boolean continueChecking = true;
+
+        while (continueChecking) {
+            System.out.print("Enter a string to check (or 'exit' to quit): ");
+            String userInput = scanner.nextLine();
+
+            if (userInput.equalsIgnoreCase("exit")) {
+                System.out.println("\n✓ Exiting Special Characters Mode\n");
+                continueChecking = false;
+            } else if (userInput.trim().isEmpty()) {
+                System.out.println("❌ Input cannot be empty!\n");
+            } else {
+                boolean result = isPalindrome(userInput);
+                String mode = ignoreSpecialChars ? "[IGNORE SPECIAL CHARS]" : "[KEEP SPECIAL CHARS]";
+                System.out.println(mode + " \"" + userInput + "\" is " + (result ? "a palindrome" : "NOT a palindrome") + "\n");
+            }
+        }
+    }
+
     public static void main(String[] args) {
         displayWelcomeMessage();
         checkHardcodedPalindromes();
@@ -259,5 +307,6 @@ public class PalindromeCheckerApp {
         exportResultsToFile();
         displayPalindromeStatistics();
         caseSensitiveModePalindromeCheck();
+        specialCharactersHandling();
     }
 }
