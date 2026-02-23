@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -298,6 +300,73 @@ public class PalindromeCheckerApp {
         }
     }
 
+    // UC10: Batch File Processing
+    public static void batchFileProcessing() {
+        System.out.println("--- UC10: Batch File Processing ---\n");
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter input file name (e.g., input.txt): ");
+        String inputFileName = scanner.nextLine();
+
+        System.out.print("Enter output file name (e.g., batch_results.txt): ");
+        String outputFileName = scanner.nextLine();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName));
+             FileWriter writer = new FileWriter(outputFileName)) {
+
+            writer.write("Batch File Processing Results\n");
+            writer.write("Generated: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n");
+            writer.write("Input File: " + inputFileName + "\n");
+            writer.write("=".repeat(60) + "\n\n");
+
+            String line;
+            int lineCount = 0;
+            int palindromeCount = 0;
+
+            while ((line = reader.readLine()) != null) {
+                lineCount++;
+                line = line.trim();
+
+                if (line.isEmpty()) {
+                    continue;
+                }
+
+                boolean result = isPalindrome(line);
+                if (result) {
+                    palindromeCount++;
+                }
+
+                String status = result ? "✓ PALINDROME" : "✗ NOT PALINDROME";
+                String output = lineCount + ". " + status + " : \"" + line + "\"";
+
+                System.out.println(output);
+                writer.write(output + "\n");
+            }
+
+            writer.write("\n" + "=".repeat(60) + "\n");
+            writer.write("SUMMARY:\n");
+            writer.write("Total Strings Processed: " + lineCount + "\n");
+            writer.write("Palindromes Found: " + palindromeCount + "\n");
+            writer.write("Non-Palindromes: " + (lineCount - palindromeCount) + "\n");
+
+            if (lineCount > 0) {
+                double percentage = (palindromeCount * 100.0) / lineCount;
+                writer.write("Palindrome Percentage: " + String.format("%.2f", percentage) + "%\n");
+            }
+
+            writer.write("=".repeat(60) + "\n");
+            writer.write("End of Report\n");
+
+            System.out.println("\n✓ Batch processing completed!");
+            System.out.println("✓ Results saved to '" + outputFileName + "'\n");
+
+        } catch (IOException e) {
+            System.out.println("❌ Error processing file: " + e.getMessage());
+            System.out.println("❌ Make sure the input file exists in the current directory.\n");
+        }
+    }
+
     public static void main(String[] args) {
         displayWelcomeMessage();
         checkHardcodedPalindromes();
@@ -308,5 +377,6 @@ public class PalindromeCheckerApp {
         displayPalindromeStatistics();
         caseSensitiveModePalindromeCheck();
         specialCharactersHandling();
+        batchFileProcessing();
     }
 }
